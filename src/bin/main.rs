@@ -61,7 +61,8 @@ async fn main(_spawner: Spawner) -> ! {
     // === SPI Bus Setup ===
     println!("Setting up SPI bus for SD card...");
     let spi2 = peripherals.SPI2;
-    let cs_2 = Output::new(peripherals.GPIO18, Level::High, OutputConfig::default()); // CS pin
+    let cs = Output::new(peripherals.GPIO18, Level::High, OutputConfig::default()); // CS pin
+                                                                                    // With this setup, you could add a second SPI device on this same bus with a second CS pin
     let sclk = peripherals.GPIO19; // Serial Clock
     let mosi = peripherals.GPIO23; // Master Out Slave In
     let miso = peripherals.GPIO21; // Master In Slave Out
@@ -78,14 +79,14 @@ async fn main(_spawner: Spawner) -> ! {
         .with_sck(sclk);
 
     let shared_spi_bus = RefCell::new(spi_bus);
-    let spi_device_2 = RefCellDevice::new(&shared_spi_bus, cs_2, EspHalDelay::new())
+    let spi_device = RefCellDevice::new(&shared_spi_bus, cs, EspHalDelay::new())
         .expect("Failed to create SPI device");
+    // Here is where you would create a second SPI device (i.e. if you have a second SD card)
 
     println!("    SPI bus configured");
 
-    let sdcard = SdCard::new(spi_device_2, EspHalDelay::new());
-
     // Initialize SD card with retry logic
+    let sdcard = SdCard::new(spi_device, EspHalDelay::new());
     println!("Initializing SD Card...");
     let sd_size =
         retry_with_backoff("SD Card initialization", || async { sdcard.num_bytes() }).await;
