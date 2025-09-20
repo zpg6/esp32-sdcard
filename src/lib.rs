@@ -64,9 +64,9 @@ impl embedded_sdmmc::TimeSource for DummyTimeSource {
 /// Note: This is the max length for a filename in this filesystem.
 pub fn generate_random_filename(rng: &mut Rng, filename: &mut [u8; 12]) {
     const CHARS: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    for i in 0..8 {
+    for byte in filename.iter_mut().take(8) {
         let idx = (rng.random() as usize) % CHARS.len();
-        filename[i] = CHARS[idx];
+        *byte = CHARS[idx];
     }
     filename[8] = b'.';
     filename[9] = b'C';
