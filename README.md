@@ -4,10 +4,11 @@ A simple example of using [`embedded-sdmmc-rs`](https://github.com/rust-embedded
 
 ## What it does
 
-1. Initializes SD card with automatic retries
-2. Creates a random CSV filename
-3. Writes a header and counts to the file every second
-4. Flushes data every 10 counts
+1. Initializes Micro SD card with automatic retries
+2. Creates a random CSV filename in the format of "ABC12345.CSV"
+3. Writes the CSV header "Timestamp,Counter,Value"
+4. Writes the timestamp and latest counter value to the file every second
+5. Flushes data every 10 counts to ensure the filesystem's directory entry is updated for this file
 
 ## Hardware Setup
 

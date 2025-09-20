@@ -47,9 +47,9 @@ async fn main(_spawner: Spawner) -> ! {
     let timer0 = TimerGroup::new(peripherals.TIMG1);
     esp_hal_embassy::init(timer0.timer0);
 
-    println!("\n==============================");
-    println!("ESP32 SD Card Counter Example");
-    println!("==============================\n");
+    println!("\n====================================");
+    println!("ESP32 Micro SD Card Counter Example");
+    println!("====================================\n");
 
     // Generate random filename for CSV file
     let mut rng = Rng::new(peripherals.RNG);
@@ -61,8 +61,9 @@ async fn main(_spawner: Spawner) -> ! {
     // === SPI Bus Setup ===
     println!("Setting up SPI bus for SD card...");
     let spi2 = peripherals.SPI2;
+
+    // With this setup, you could add a second SPI device on this same bus with a second CS pin
     let cs = Output::new(peripherals.GPIO18, Level::High, OutputConfig::default()); // CS pin
-                                                                                    // With this setup, you could add a second SPI device on this same bus with a second CS pin
     let sclk = peripherals.GPIO19; // Serial Clock
     let mosi = peripherals.GPIO23; // Master Out Slave In
     let miso = peripherals.GPIO21; // Master In Slave Out
